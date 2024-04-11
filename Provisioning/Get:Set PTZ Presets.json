@@ -1,0 +1,410 @@
+[
+    {
+        "id": "7cc5d48ebc6033d5",
+        "type": "tab",
+        "label": "Get/Set PTZ Presets",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2ed786d4e7e1eb9b",
+        "type": "ui_text",
+        "z": "7cc5d48ebc6033d5",
+        "group": "bb78ee5c.3f5d18",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "PTZ Presets",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 770,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "bfe1854c013dd686",
+        "type": "ui_form",
+        "z": "7cc5d48ebc6033d5",
+        "name": "Fetch PTZ Presets",
+        "label": "Fetch PTZ Presets",
+        "group": "bb78ee5c.3f5d18",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Camera IP",
+                "value": "address",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Username",
+                "value": "user",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Password",
+                "value": "password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "address": "",
+            "user": "",
+            "password": ""
+        },
+        "payload": "",
+        "submit": "Fetch Presets",
+        "cancel": "",
+        "topic": "",
+        "topicType": "str",
+        "splitLayout": false,
+        "className": "",
+        "x": 210,
+        "y": 280,
+        "wires": [
+            [
+                "29b5ed6b5f61ed90"
+            ]
+        ]
+    },
+    {
+        "id": "2f76879ba2cff327",
+        "type": "Axis device",
+        "z": "7cc5d48ebc6033d5",
+        "name": "Get PTZ Presets",
+        "preset": "9c539fd3c9d31352",
+        "action": "HTTP Get",
+        "cgi": "/axis-cgi/com/ptz.cgi?query=presetposcamdata",
+        "data": "",
+        "options": "",
+        "filename": "",
+        "x": 580,
+        "y": 280,
+        "wires": [
+            [
+                "2ed786d4e7e1eb9b"
+            ]
+        ]
+    },
+    {
+        "id": "29b5ed6b5f61ed90",
+        "type": "function",
+        "z": "7cc5d48ebc6033d5",
+        "name": "Payload to msg",
+        "func": "msg.address = msg.payload.address;\nmsg.user = msg.payload.user;\nmsg.password = msg.payload.password;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 280,
+        "wires": [
+            [
+                "2f76879ba2cff327"
+            ]
+        ]
+    },
+    {
+        "id": "ac1f6b3a.8f47e",
+        "type": "ui_form",
+        "z": "7cc5d48ebc6033d5",
+        "name": "Add PTZ Preset Form",
+        "label": "Add PTZ Preset",
+        "group": "bb78ee5c.3f5d18",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Camera IP",
+                "value": "address",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Username",
+                "value": "user",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Password",
+                "value": "password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Preset Name",
+                "value": "preset_name",
+                "type": "text",
+                "required": true,
+                "rows": 1
+            },
+            {
+                "label": "Pan",
+                "value": "pan",
+                "type": "text",
+                "required": true,
+                "rows": 1
+            },
+            {
+                "label": "Tilt",
+                "value": "tilt",
+                "type": "text",
+                "required": true,
+                "rows": 1
+            },
+            {
+                "label": "Zoom",
+                "value": "zoom",
+                "type": "text",
+                "required": true,
+                "rows": 1
+            }
+        ],
+        "formValue": {
+            "address": "",
+            "user": "",
+            "password": "",
+            "preset_name": "",
+            "pan": "",
+            "tilt": "",
+            "zoom": ""
+        },
+        "payload": "",
+        "submit": "Add Preset",
+        "cancel": "",
+        "topic": "",
+        "topicType": "str",
+        "splitLayout": false,
+        "className": "",
+        "x": 200,
+        "y": 340,
+        "wires": [
+            [
+                "f09ef4b2b1928dfa",
+                "5b0473ea3bb4b361",
+                "574fe25bf34300b5"
+            ]
+        ]
+    },
+    {
+        "id": "b38d6c7566e72ef3",
+        "type": "function",
+        "z": "7cc5d48ebc6033d5",
+        "name": "Payload to msg",
+        "func": "msg.address = msg.payload.address;\nmsg.user = msg.payload.user;\nmsg.password = msg.payload.password;\nmsg.address = msg.payload.address;\nmsg.cgi = msg.payload.cgi;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 460,
+        "wires": [
+            [
+                "644b3593c2434427"
+            ]
+        ]
+    },
+    {
+        "id": "5f9a39109ebc31e7",
+        "type": "function",
+        "z": "7cc5d48ebc6033d5",
+        "name": "Create Preset",
+        "func": "// Extract data from the message\nvar presetName = msg.payload.preset_name;\nvar pan = msg.payload.pan;\nvar tilt = msg.payload.tilt;\nvar zoom = msg.payload.zoom;\n\n// Construct the URL\nvar url = \"/axis-cgi/com/ptzconfig.cgi?\" +\n    \"setserverpresetname=\" + presetName +\n    \"&setdevicepreset=pan=\" + pan + \":tilt=\" + tilt + \":zoom=\" + zoom;\n\n// Assign URL to msg.payload\nmsg.payload.cgi = url;\n\n// Return the modified message\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 340,
+        "wires": [
+            [
+                "b38d6c7566e72ef3"
+            ]
+        ]
+    },
+    {
+        "id": "644b3593c2434427",
+        "type": "Axis device",
+        "z": "7cc5d48ebc6033d5",
+        "name": "",
+        "preset": "f869d7cd6eb9b911",
+        "action": "HTTP Get",
+        "cgi": "",
+        "data": "",
+        "options": "",
+        "filename": "",
+        "x": 780,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f09ef4b2b1928dfa",
+        "type": "function",
+        "z": "7cc5d48ebc6033d5",
+        "name": "Payload to msg",
+        "func": "msg.address = msg.payload.address;\nmsg.user = msg.payload.user;\nmsg.password = msg.payload.password;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 400,
+        "wires": [
+            [
+                "d4ab50dc52059c62"
+            ]
+        ]
+    },
+    {
+        "id": "d4ab50dc52059c62",
+        "type": "delay",
+        "z": "7cc5d48ebc6033d5",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "6",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 600,
+        "y": 400,
+        "wires": [
+            [
+                "2f76879ba2cff327"
+            ]
+        ]
+    },
+    {
+        "id": "5b0473ea3bb4b361",
+        "type": "function",
+        "z": "7cc5d48ebc6033d5",
+        "name": "Move PTZ",
+        "func": "// Extract data from the message\nvar presetName = msg.payload.preset_name;\nvar pan = msg.payload.pan;\nvar tilt = msg.payload.tilt;\nvar zoom = msg.payload.zoom;\n\n// Construct the URL\nvar url = \"/axis-cgi/com/ptz.cgi?\" +\n    \"pan=\" + pan + \"&tilt=\" + tilt + \"&zoom=\" + zoom;\n\n// Assign URL to msg.payload\nmsg.payload.cgi = url;\n\n// Return the modified message\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 460,
+        "wires": [
+            [
+                "b38d6c7566e72ef3"
+            ]
+        ]
+    },
+    {
+        "id": "574fe25bf34300b5",
+        "type": "delay",
+        "z": "7cc5d48ebc6033d5",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 400,
+        "y": 340,
+        "wires": [
+            [
+                "5f9a39109ebc31e7"
+            ]
+        ]
+    },
+    {
+        "id": "5d1c6bbb8f6dfb84",
+        "type": "ui_spacer",
+        "z": "7cc5d48ebc6033d5",
+        "name": "spacer",
+        "group": "bb78ee5c.3f5d18",
+        "order": 2,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "df9e15c7627a5e84",
+        "type": "ui_spacer",
+        "z": "7cc5d48ebc6033d5",
+        "name": "spacer",
+        "group": "bb78ee5c.3f5d18",
+        "order": 3,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "bb78ee5c.3f5d18",
+        "type": "ui_group",
+        "name": "Camera Presets",
+        "tab": "177cafd6.91e7e9",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "9c539fd3c9d31352",
+        "type": "Device Access",
+        "name": "",
+        "address": "payload.camera_ip",
+        "protocol": "http"
+    },
+    {
+        "id": "f869d7cd6eb9b911",
+        "type": "Device Access",
+        "name": "Demo camera",
+        "address": "",
+        "protocol": "http"
+    },
+    {
+        "id": "177cafd6.91e7e9",
+        "type": "ui_tab",
+        "name": "PTZ",
+        "icon": "camera",
+        "order": 5,
+        "disabled": false,
+        "hidden": false
+    }
+]
