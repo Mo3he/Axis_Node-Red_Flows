@@ -1,0 +1,311 @@
+[
+    {
+        "id": "8d3f37889e7fbc90",
+        "type": "tab",
+        "label": "Get/Set Temp Areas",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f46c67e4.9d11c",
+        "type": "function",
+        "z": "8d3f37889e7fbc90",
+        "name": "Process Response",
+        "func": "// Parse the incoming message payload\nvar data = msg.payload;\n\n// Extract relevant information from the data\nvar areas = data.data.arealist;\n\n// Initialize an array to store the transformed data\nvar transformedAreas = [];\n\n// Iterate over each area object and transform it\nareas.forEach(function(area) {\n    var transformedArea = {\n        id: area.id,\n        name: area.name,\n        enabled: area.enabled ? 'Yes' : 'No', // Convert boolean to string\n        detectionType: area.detectionType,\n        measurement: area.measurement,\n        threshold: area.threshold,\n        delay: area.delay,\n        areaOverlay: area.areaOverlay,\n        temperatureOverlay: area.temperatureOverlay ? 'Yes' : 'No', // Convert boolean to string\n        presetNbr: area.presetNbr,\n        vertices: area.vertices.join(',') // Convert array to string\n    };\n    \n    // Push the transformed area object to the array\n    transformedAreas.push(transformedArea);\n});\n\n// Create a new message object with the transformed data\nvar newMsg = {\n    payload: transformedAreas\n};\n\n// Send the new message object to the next node\nreturn newMsg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 260,
+        "wires": [
+            [
+                "4fb57429.1223d4"
+            ]
+        ]
+    },
+    {
+        "id": "4fb57429.1223d4",
+        "type": "debug",
+        "z": "8d3f37889e7fbc90",
+        "name": "Area List",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e1254159199e1465",
+        "type": "ui_form",
+        "z": "8d3f37889e7fbc90",
+        "name": "Fetch PTZ Presets",
+        "label": "List temperature detection areas",
+        "group": "c738ed55363b0b41",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Camera IP",
+                "value": "address",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Username",
+                "value": "user",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Password",
+                "value": "password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "address": "",
+            "user": "",
+            "password": ""
+        },
+        "payload": "",
+        "submit": "Fetch Areas",
+        "cancel": "",
+        "topic": "",
+        "topicType": "str",
+        "splitLayout": false,
+        "className": "",
+        "x": 190,
+        "y": 260,
+        "wires": [
+            [
+                "10b602dde235cede"
+            ]
+        ]
+    },
+    {
+        "id": "4f1d6e77f0185ddb",
+        "type": "Axis device",
+        "z": "8d3f37889e7fbc90",
+        "name": "",
+        "preset": "f869d7cd6eb9b911",
+        "action": "HTTP Post",
+        "cgi": "/axis-cgi/thermometry.cgi",
+        "data": "",
+        "options": "",
+        "filename": "",
+        "x": 610,
+        "y": 260,
+        "wires": [
+            [
+                "f46c67e4.9d11c",
+                "b7f9889f9704e74c"
+            ]
+        ]
+    },
+    {
+        "id": "10b602dde235cede",
+        "type": "function",
+        "z": "8d3f37889e7fbc90",
+        "name": "Payload to msg",
+        "func": "msg.address = msg.payload.address;\nmsg.user = msg.payload.user;\nmsg.password = msg.payload.password;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 200,
+        "wires": [
+            [
+                "d50cc10adbf86cf1"
+            ]
+        ]
+    },
+    {
+        "id": "d50cc10adbf86cf1",
+        "type": "function",
+        "z": "8d3f37889e7fbc90",
+        "name": "listAreas",
+        "func": "msg.payload = {\n    \"apiVersion\": \"1.0\",\n    \"context\": \"nodered\",\n        \"method\": \"listAreas\",\n        \"params\": {\n            \"presetNbr\": 0\n  }\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 260,
+        "wires": [
+            [
+                "4f1d6e77f0185ddb"
+            ]
+        ]
+    },
+    {
+        "id": "7b6d3feabb9a650e",
+        "type": "Axis device",
+        "z": "8d3f37889e7fbc90",
+        "name": "",
+        "preset": "f869d7cd6eb9b911",
+        "action": "HTTP Post",
+        "cgi": "/axis-cgi/thermometry.cgi",
+        "data": "",
+        "options": "",
+        "filename": "",
+        "x": 890,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "deb9a28253afb7d1",
+        "type": "ui_template",
+        "z": "8d3f37889e7fbc90",
+        "group": "c738ed55363b0b41",
+        "name": "Add area form",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "format": "<!DOCTYPE html>\n<html>\n\n<head>\n    <title>Add Area Form</title>\n    <script>\n        function submitForm() {\n            var formData = {\n                \"apiVersion\": \"1.0\",\n                \"context\": \"my context\",\n                \"method\": \"addArea\",\n                \"params\": {\n                    \"imagesource\": parseInt(document.getElementById(\"imagesource\").value),\n                    \"enabled\": document.getElementById(\"enabled\").checked,\n                    \"name\": document.getElementById(\"name\").value,\n                    \"detectionType\": document.getElementById(\"detectionType\").value,\n                    \"measurement\": document.getElementById(\"measurement\").value,\n                    \"threshold\": parseInt(document.getElementById(\"threshold\").value),\n                    \"delay\": parseInt(document.getElementById(\"delay\").value),\n                    \"vertices\": JSON.parse(document.getElementById(\"vertices\").value),\n                    \"areaOverlay\": document.getElementById(\"areaOverlay\").value,\n                    \"temperatureOverlay\": document.getElementById(\"temperatureOverlay\").checked,\n                    \"presetNbr\": parseInt(document.getElementById(\"presetNbr\").value)\n                }\n            };\n\n            fetch('/submit', {\n                method: 'POST',\n                body: JSON.stringify(formData),\n                headers: {\n                    'Content-Type': 'application/json'\n                }\n            });\n        }\n    </script>\n</head>\n\n<body>\n    <h2>Add Area Form</h2>\n    <form id=\"areaForm\" onsubmit=\"submitForm(); return false;\">\n        <label for=\"imagesource\">Image Source:</label><br>\n        <input type=\"number\" id=\"imagesource\" name=\"imagesource\" value=\"0\"><br>\n\n        <label for=\"enabled\">Enabled:</label>\n        <input type=\"checkbox\" id=\"enabled\" name=\"enabled\" checked><br>\n\n        <label for=\"name\">Name:</label><br>\n        <input type=\"text\" id=\"name\" name=\"name\" value=\"Area 1\"><br>\n\n        <label for=\"detectionType\">Detection Type:</label><br>\n        <input type=\"text\" id=\"detectionType\" name=\"detectionType\" value=\"above\"><br>\n\n        <label for=\"measurement\">Measurement:</label><br>\n        <input type=\"text\" id=\"measurement\" name=\"measurement\" value=\"average\"><br>\n\n        <label for=\"threshold\">Threshold:</label><br>\n        <input type=\"number\" id=\"threshold\" name=\"threshold\" value=\"100\"><br>\n\n        <label for=\"delay\">Delay:</label><br>\n        <input type=\"number\" id=\"delay\" name=\"delay\" value=\"5\"><br>\n\n        <label for=\"vertices\">Vertices:</label><br>\n        <input type=\"text\" id=\"vertices\" name=\"vertices\" value=\"[[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]\"><br>\n\n        <label for=\"areaOverlay\">Area Overlay:</label><br>\n        <input type=\"text\" id=\"areaOverlay\" name=\"areaOverlay\" value=\"always\"><br>\n\n        <label for=\"temperatureOverlay\">Temperature Overlay:</label>\n        <input type=\"checkbox\" id=\"temperatureOverlay\" name=\"temperatureOverlay\"><br>\n\n        <label for=\"presetNbr\">Preset Number:</label><br>\n        <input type=\"number\" id=\"presetNbr\" name=\"presetNbr\" value=\"1\"><br>\n\n        <input type=\"submit\" value=\"Submit\">\n    </form>\n</body>\n\n</html>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 380,
+        "y": 400,
+        "wires": [
+            [
+                "1f9aa126953a4245"
+            ]
+        ]
+    },
+    {
+        "id": "9eea036b943f40fa",
+        "type": "http in",
+        "z": "8d3f37889e7fbc90",
+        "name": "",
+        "url": "/submit",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 170,
+        "y": 400,
+        "wires": [
+            [
+                "deb9a28253afb7d1"
+            ]
+        ]
+    },
+    {
+        "id": "b7f9889f9704e74c",
+        "type": "ui_text",
+        "z": "8d3f37889e7fbc90",
+        "group": "c738ed55363b0b41",
+        "order": 4,
+        "width": "20",
+        "height": "10",
+        "name": "",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1110,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "1f9aa126953a4245",
+        "type": "function",
+        "z": "8d3f37889e7fbc90",
+        "name": "Payload to msg",
+        "func": "// Retrieve values from flow context\nmsg.address = flow.get('address');\nmsg.user = flow.get('user');\nmsg.password = flow.get('password');\n\n// Pass the message from the previous node\nmsg.payload = msg.payload;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 400,
+        "wires": [
+            [
+                "7b6d3feabb9a650e",
+                "61155b70ec3144ed"
+            ]
+        ]
+    },
+    {
+        "id": "61155b70ec3144ed",
+        "type": "delay",
+        "z": "8d3f37889e7fbc90",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 660,
+        "y": 340,
+        "wires": [
+            [
+                "d50cc10adbf86cf1"
+            ]
+        ]
+    },
+    {
+        "id": "c738ed55363b0b41",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "0aa93f16b0aee609",
+        "order": 2,
+        "disp": true,
+        "width": "25",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "f869d7cd6eb9b911",
+        "type": "Device Access",
+        "name": "Demo camera",
+        "address": "",
+        "protocol": "http"
+    },
+    {
+        "id": "0aa93f16b0aee609",
+        "type": "ui_tab",
+        "name": "Temp",
+        "icon": "whatshot",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    }
+]
